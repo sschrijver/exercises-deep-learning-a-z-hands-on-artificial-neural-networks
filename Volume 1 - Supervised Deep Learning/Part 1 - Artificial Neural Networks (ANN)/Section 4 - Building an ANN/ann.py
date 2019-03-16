@@ -64,3 +64,37 @@ y_pred = (y_pred > 0.5)
 # Making the Confusion Matrix
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
+
+'''
+    Homework:
+    Use our ANN model to predict if the customer with the following informations will leave the bank: 
+
+        Geography: France
+        Credit Score: 600
+        Gender: Male
+        Age: 40 years old
+        Tenure: 3 years
+        Balance: $60000
+        Number of Products: 2
+        Does this customer have a credit card ? Yes
+        Is this customer an Active Member: Yes
+        Estimated Salary: $50000
+
+    So should we say goodbye to that customer ?
+
+    The solution is provided in the next Lecture but I strongly recommend that you try to solve it on your own.
+
+'''
+
+customer = pd.read_csv('datasets/customer.csv')
+X_customer = customer.iloc[:, 3:13].values
+X_customer[:, 1] = labelencoder_X_geo.transform(X_customer[:, 1])
+X_customer[:, 2] = labelencoder_X_age.transform(X_customer[:, 2])
+X_customer = onehotencoder.transform(X_customer).toarray()
+X_customer = X_customer[:,1:]
+X_customer = sc.transform(X_customer)
+
+y_pred_customer = classifier.predict(X_customer)
+
+# Set threshold, if pred > 0.5, customer leaves, else customer stays
+y_pred_customer = (y_pred_customer > 0.5)
